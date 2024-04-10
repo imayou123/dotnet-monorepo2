@@ -45,7 +45,7 @@ jobs:
       - name: sonarQube Scan 1
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"imayou123_dotnet-monorepo2_pipeline" /d:sonar.projectBaseDir="TopLevel/Project1/pipelines-dotnet-core" /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"imayou123_dotnet-monorepo2_pipeline" /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           dotnet build TopLevel/Project1/pipelines-dotnet-core/dotnetcore-sample.sln
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}"
         # add project key in previous command
@@ -84,7 +84,7 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"imayou123_dotnet-monorepo2_eShop" /d:sonar.projectBaseDir="TopLevel/Project2/eShopOnWeb" /d:sonar.token="${{ secrets.SONAR_TOKEN_2 }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build TopLevel/Project2/eShopOnWeb/eShopOnWeb.sln
+          dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN_2 }}"
         # add project key in previous command
   # Add other scan jobs if you wish to scan more projects in the monorepo   
