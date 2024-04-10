@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - master # the name of your main branch
+      - main # the name of your main branch
     paths:
       - 'TopLevel/Project1/pipelines-dotnet-core/**' # the paths to your monorepo projects from the monorepo root directory
       - 'TopLevel/Project2/eShopOnWeb/**'
