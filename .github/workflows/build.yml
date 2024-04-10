@@ -47,7 +47,7 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"imayou123_dotnet-monorepo2_pipeline" /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
-          dotnet build .\TopLevel\Project1\pipelines-dotnet-core\dotnetcore-sample.sln
+          dotnet build TopLevel\Project1\pipelines-dotnet-core\dotnetcore-sample.sln
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}"
         # add project key in previous command
   sonarQubeScan2:
