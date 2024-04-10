@@ -1,0 +1,90 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master # the name of your main branch
+    paths:
+      - 'TopLevel/Project1/pipelines-dotnet-core/**' # the paths to your monorepo projects from the monorepo root directory
+      - 'TopLevel/Project2/eShopOnWeb/**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarQubeScan1:
+    name: sonarQube Scan 1
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Cache SonarQube packages
+        uses: actions/cache@v1
+        with:
+          path: ~\.sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarQube scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarQube scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: sonarQube Scan 1
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"imayou123_dotnet-monorepo2_pipeline" /d:sonar.projectBaseDir="TopLevel/Project1/pipelines-dotnet-core" /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          dotnet build TopLevel/Project1/pipelines-dotnet-core\dotnetcore-sample.sln
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN_1 }}"
+        # add project key in previous command
+  sonarQubeScan2:
+    name: sonarQube Scan 2
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - name: Cache SonarQube packages
+        uses: actions/cache@v1
+        with:
+          path: ~\.sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarQube scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v1
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarQube scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: sonarQube Scan 2
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"imayou123_dotnet-monorepo2_eShop" /d:sonar.projectBaseDir="TopLevel/Project2/eShopOnWeb" /d:sonar.token="${{ secrets.SONAR_TOKEN_2 }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          dotnet build TopLevel/Project2/eShopOnWeb/eShopOnWeb.sln
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN_2 }}"
+        # add project key in previous command
+  # Add other scan jobs if you wish to scan more projects in the monorepo   
